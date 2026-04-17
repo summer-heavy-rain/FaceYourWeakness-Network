@@ -1,0 +1,393 @@
+# ============================================================
+# Clash (mihomo) 带注释的基础配置模板
+# ============================================================
+#
+# 用途：学习参考 + 实战模板。每个字段都有中文注释解释作用和设定理由。
+# 注意：这是一个 TEMPLATE，proxy 节点由订阅提供，不在此文件中硬编码。
+#       实际使用时通过 proxy-providers 引用订阅。
+#
+# 适用内核：mihomo (Clash Meta)
+# 编码要求：UTF-8（不带 BOM）
+#
+
+# ============================================================
+# 一、通用设置 (General)
+# ============================================================
+
+# mixed-port: 同时接受 HTTP 和 SOCKS5 连接的混合端口
+# 比分开设 port 和 socks-port 更方便，一个端口搞定两种协议
+mixed-port: 7897
+
+# allow-lan: 是否允许局域网设备通过此端口连接
+# 如果要给同事共享代理，设为 true；单人使用设为 false 更安全
+allow-lan: false
+
+# bind-address: 监听地址
+# "*" = 所有网卡；"127.0.0.1" = 仅本机；也可以写具体局域网 IP
+bind-address: "*"
+
+# mode: 运行模式
+# rule = 基于规则分流（推荐）
+# global = 全部走代理
+# direct = 全部直连
+mode: rule
+
+# log-level: 日志级别
+# silent / error / warning / info / debug
+# 日常用 info，排错时改 debug（日志量会很大）
+log-level: info
+
+# ipv6: 是否允许 IPv6 流量
+# 国内 IPv6 环境复杂，多数机场不支持 IPv6 出口，关掉省事
+ipv6: false
+
+# external-controller: RESTful API 监听地址
+# Clash Verge 的 UI 通过这个 API 和 mihomo 通信
+# 127.0.0.1 = 只允许本机访问，安全
+external-controller: 127.0.0.1:9097
+
+# external-ui: 外部 Web UI 路径（可选）
+# 如果你想用 Yacd 或 Metacubexd 等第三方面板
+# external-ui: ui
+
+# secret: API 密钥（可选）
+# 如果 external-controller 绑定了 0.0.0.0，强烈建议设密码
+# secret: "your-secret-here"
+
+# find-process-mode: 进程匹配模式
+# always = 始终查找进程名（PROCESS-NAME 规则需要）
+# strict = 仅在规则用到时查找
+# off = 关闭
+# 如果你的规则里用了 PROCESS-NAME，必须开
+find-process-mode: always
+
+# global-client-fingerprint: 全局 TLS 指纹
+# 伪装成 Chrome 浏览器的 TLS 指纹，帮助规避 GFW 的 TLS 指纹识别
+global-client-fingerprint: chrome
+
+# ============================================================
+# 二、DNS 配置
+# ============================================================
+#
+# 为什么 Clash 需要自己做 DNS？两个原因：
+# 1. 规则匹配需要域名，如果 OS 先解析成 IP 就丢了域名信息
+# 2. GFW 会 DNS 污染，运营商 DNS 返回假 IP
+#
+# 推荐模式：fake-ip — 给每个域名分配一个假 IP（198.18.x.x 段），
+# Clash 内部维护 域名↔假IP 映射表，真正的 DNS 解析由远端代理服务器完成。
+# 好处：零延迟响应 + 彻底避免 DNS 污染。
+
+dns:
+  enable: true
+
+  # listen: DNS 服务监听地址（TUN 模式下 dns-hijack 会把 DNS 请求劫持到这里）
+  listen: 0.0.0.0:1053
+
+  # enhanced-mode: DNS 增强模式
+  # fake-ip = 推荐，原因见上
+  # redir-host = 做真实 DNS 解析，Clash 记录映射。兼容性好但有 DNS 泄漏风险
+  enhanced-mode: fake-ip
+
+  # fake-ip-range: fake-ip 地址池范围
+  # 198.18.0.0/15 是 IANA 保留的基准测试地址段，不会和真实 IP 冲突
+  fake-ip-range: 198.18.0.1/16
+
+  # fake-ip-filter: 这些域名不使用 fake-ip，而是返回真实 IP
+  # 某些应用/协议拿到假 IP 会出问题，需要排除
+  fake-ip-filter:
+    # Windows 网络探测，拿到假 IP 会误判"无网络"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    # NTP 时间同步
+    - "time.*.com"
+    - "time.*.gov"
+    - "time.*.edu.cn"
+    - "ntp.*.com"
+    - "time.windows.com"
+    - "time.nist.gov"
+    - "time.apple.com"
+    # 本地域名
+    - "localhost"
+    - "*.local"
+    - "*.lan"
+    - "*.localdomain"
+    # mDNS
+    - "*.home.arpa"
+    # STUN/WebRTC（用于语音/视频通话的 NAT 穿透）
+    - "stun.*.*"
+    - "stun.*.*.*"
+    # 游戏平台（对延迟敏感且需要真实 IP）
+    - "+.steam*"
+    - "*.battlenet.com.cn"
+    # QQ 微信等国内 IM（需要真实 IP 做连接优化）
+    - "*.qq.com"
+    - "*.weixin.qq.com"
+
+  # nameserver: 主 DNS 服务器列表
+  # 这些用于解析 国内域名 和 不走代理的域名
+  # 选择国内可达的、支持 DoH/DoT 的 DNS 服务器
+  nameserver:
+    - https://doh.pub/dns-query            # 腾讯 DNSPod DoH
+    - https://dns.alidns.com/dns-query     # 阿里云 DoH
+    - tls://dot.pub:853                    # 腾讯 DoT
+
+  # fallback: 备用 DNS 服务器
+  # 当 nameserver 的解析结果被 fallback-filter 判定为"可能被污染"时，
+  # 使用 fallback 里的 DNS 重新解析。
+  # 选择墙外的 DNS（通过代理访问，不会被污染）
+  fallback:
+    - https://dns.cloudflare.com/dns-query   # Cloudflare DoH
+    - https://dns.google/dns-query           # Google DoH
+    - tls://8.8.4.4:853                      # Google DoT
+
+  # fallback-filter: 什么时候启用 fallback
+  fallback-filter:
+    # geoip: true = 如果 nameserver 解析出来的 IP 不属于 geoip-code 指定的国家，
+    #              就认为可能被污染，用 fallback 重新解析
+    geoip: true
+    geoip-code: CN
+
+    # ipcidr: 如果解析结果落在这些 IP 段，认为被污染（这些是已知的 GFW 污染 IP）
+    ipcidr:
+      - 240.0.0.0/4       # 保留地址段，正常 DNS 不应该返回
+
+    # domain: 这些域名始终用 fallback 解析（已知被墙的域名）
+    domain:
+      - "+.google.com"
+      - "+.facebook.com"
+      - "+.twitter.com"
+      - "+.youtube.com"
+      - "+.googleapis.com"
+      - "+.openai.com"
+
+# ============================================================
+# 三、TUN 配置
+# ============================================================
+#
+# TUN 模式在操作系统层面创建虚拟网卡，劫持所有网络流量。
+# 优点：真正的全局代理，不依赖应用自己设置代理
+# 缺点：需要管理员权限（Windows 下需要 Clash Verge Service Mode）
+#
+# 如果你只用浏览器和 Cursor（它们支持系统代理），可以不开 TUN。
+# 如果你用 Docker、某些终端工具等不读系统代理的程序，必须开 TUN。
+
+tun:
+  enable: false          # 默认关闭，需要时手动开启或通过 Mixin/Script 开启
+  stack: mixed           # mixed = gVisor + system，兼容性和性能的折中
+                         # gvisor = 用户态网络栈，兼容性好但 CPU 占用稍高
+                         # system = 系统网络栈，性能好但某些场景兼容性差
+  dns-hijack:
+    - any:53             # 劫持所有 DNS 请求（不管原本发给哪个 DNS）到 Clash 的 DNS 模块
+  auto-route: true       # 自动设置路由表，让流量走 TUN 虚拟网卡
+  auto-detect-interface: true   # 自动检测出口网卡
+
+# ============================================================
+# 四、Proxy Providers（代理提供者）
+# ============================================================
+#
+# proxy-providers 让你从外部 URL（机场订阅）或本地文件加载节点列表，
+# 而不用在配置文件里硬编码每个节点。
+# 订阅更新时只更新 provider，不影响你的规则和策略组。
+#
+# 注意：如果你用 Clash Verge 导入订阅，Clash Verge 会自动处理 providers。
+# 这里写出来是让你理解原理。如果你用 Script 覆写，可能需要手动配置。
+
+proxy-providers:
+  # "NxOnEarth" 是你给这个 provider 起的名字，可以随意
+  NxOnEarth:
+    type: http                                      # http = 从 URL 获取
+    url: "你的NxOnEarth订阅链接"                      # 替换为实际订阅 URL
+    interval: 86400                                  # 更新间隔，单位秒（86400 = 24小时）
+    path: ./providers/NxOnEarth.yaml                 # 下载后保存的本地路径
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204      # 健康检查 URL（返回 204 即可达）
+      interval: 300                                   # 检查间隔，秒（300 = 5分钟）
+
+# ============================================================
+# 五、Proxy Groups（策略组）
+# ============================================================
+#
+# 策略组是规则匹配的"目的地"。规则说"这个流量交给策略组 X"，
+# 策略组 X 再决定具体用哪个节点。
+#
+# 策略组可以嵌套：规则 → 策略组A → 策略组B → 具体节点。
+
+proxy-groups:
+  # --- 手动选择：最高层级，你手动决定用哪个子策略组 ---
+  - name: "🚀 手动选择"
+    type: select
+    proxies:
+      - "♻️ 自动选择"
+      - "🛡️ 故障转移"
+      - DIRECT
+    # use 引用 proxy-providers，把所有节点也加进来供手动选择
+    use:
+      - NxOnEarth
+
+  # --- 自动选择：定时测延迟，自动用最快的节点 ---
+  - name: "♻️ 自动选择"
+    type: url-test
+    use:
+      - NxOnEarth
+    url: https://www.gstatic.com/generate_204    # 测速 URL
+    interval: 300                                 # 测速间隔（秒）
+    tolerance: 50                                 # 容差：新节点延迟比当前低 50ms 以上才切换
+                                                  # 避免频繁切换
+
+  # --- 故障转移：按顺序尝试，第一个可用的就用 ---
+  - name: "🛡️ 故障转移"
+    type: fallback
+    use:
+      - NxOnEarth
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+
+  # --- AI 服务：OpenAI、Anthropic 等需要特定地区节点 ---
+  - name: "🤖 AI服务"
+    type: select
+    proxies:
+      - "🚀 手动选择"
+      - "♻️ 自动选择"
+      - DIRECT
+    use:
+      - NxOnEarth
+    # 使用时手动选一个美国节点通常是最佳选择（OpenAI/Anthropic 对地区敏感）
+
+  # --- 开发工具：GitHub、npm、Docker Hub 等 ---
+  - name: "💻 开发工具"
+    type: select
+    proxies:
+      - "🚀 手动选择"
+      - "♻️ 自动选择"
+      - DIRECT
+    use:
+      - NxOnEarth
+
+  # --- 兜底策略组：没有匹配到任何规则的流量走这里 ---
+  - name: "🐟 漏网之鱼"
+    type: select
+    proxies:
+      - "🚀 手动选择"
+      - "♻️ 自动选择"
+      - DIRECT
+
+# ============================================================
+# 六、Rule Providers（规则提供者）
+# ============================================================
+#
+# 类似 proxy-providers，但提供的是规则列表而不是节点列表。
+# 好处：规则可以从 GitHub 上维护良好的仓库自动更新，不用自己手动维护。
+#
+# 常用规则集仓库：
+# - https://github.com/Loyalsoldier/clash-rules （质量高，更新频繁）
+# - https://github.com/blackmatrix7/ios_rule_script （覆盖面广）
+
+rule-providers:
+  # 国内直连域名
+  china-direct:
+    type: http
+    behavior: domain                       # domain = 域名列表，classical = 完整规则
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/china-direct.yaml
+    interval: 86400
+
+  # 代理域名（需要翻墙的）
+  proxy-domain:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy-domain.yaml
+    interval: 86400
+
+  # 广告域名（可选，用于屏蔽广告）
+  reject-domain:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject-domain.yaml
+    interval: 86400
+
+  # 国内 IP 段
+  china-ip:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/china-ip.yaml
+    interval: 86400
+
+  # 局域网/私有 IP
+  private-ip:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/private-ip.yaml
+    interval: 86400
+
+# ============================================================
+# 七、Rules（规则）
+# ============================================================
+#
+# 规则是有序的，从上到下逐条匹配，第一条命中即停止。
+# 就像 if-else if-else 链。
+#
+# 推荐排列顺序：
+# 1. 特殊规则（进程名匹配、特定域名）— 最具体的放最前面
+# 2. 广告屏蔽（REJECT）
+# 3. 直连规则（国内域名/IP）
+# 4. 代理规则（需要翻墙的域名）
+# 5. GeoIP 中国直连（兜底的国内流量判断）
+# 6. MATCH（终极兜底，匹配一切未命中的流量）
+
+rules:
+  # === 第 1 层：特殊流量（最高优先级） ===
+  
+  # 开发工具进程 — 按进程名匹配，不管它访问什么域名都走指定策略组
+  - PROCESS-NAME,cursor.exe,💻 开发工具
+  - PROCESS-NAME,code.exe,💻 开发工具
+  - PROCESS-NAME,git.exe,💻 开发工具
+
+  # AI 服务域名
+  - DOMAIN-SUFFIX,openai.com,🤖 AI服务
+  - DOMAIN-SUFFIX,anthropic.com,🤖 AI服务
+  - DOMAIN-SUFFIX,claude.ai,🤖 AI服务
+  - DOMAIN-SUFFIX,cursor.sh,🤖 AI服务
+  - DOMAIN-SUFFIX,cursor.com,🤖 AI服务
+
+  # 开发工具域名
+  - DOMAIN-SUFFIX,github.com,💻 开发工具
+  - DOMAIN-SUFFIX,githubusercontent.com,💻 开发工具
+  - DOMAIN-SUFFIX,github.io,💻 开发工具
+  - DOMAIN-SUFFIX,npmjs.org,💻 开发工具
+  - DOMAIN-SUFFIX,npmjs.com,💻 开发工具
+  - DOMAIN-SUFFIX,docker.io,💻 开发工具
+  - DOMAIN-SUFFIX,docker.com,💻 开发工具
+  - DOMAIN-SUFFIX,gcr.io,💻 开发工具
+  - DOMAIN-SUFFIX,pypi.org,💻 开发工具
+  - DOMAIN-SUFFIX,stackoverflow.com,💻 开发工具
+
+  # 国内镜像 — 这些即使是开发工具也应该直连（它们本身就是国内镜像）
+  - DOMAIN-SUFFIX,npmmirror.com,DIRECT
+  - DOMAIN-SUFFIX,registry.npmmirror.com,DIRECT
+
+  # === 第 2 层：广告屏蔽（可选） ===
+  - RULE-SET,reject-domain,REJECT
+
+  # === 第 3 层：直连流量 ===
+  # 局域网/私有 IP 直连
+  - RULE-SET,private-ip,DIRECT
+  # 国内域名直连
+  - RULE-SET,china-direct,DIRECT
+  # 国内 IP 直连
+  - RULE-SET,china-ip,DIRECT
+
+  # === 第 4 层：代理流量 ===
+  - RULE-SET,proxy-domain,🚀 手动选择
+
+  # === 第 5 层：GeoIP 兜底 ===
+  # 如果前面的规则都没匹配，但目标 IP 属于中国，走直连
+  - GEOIP,CN,DIRECT
+
+  # === 第 6 层：终极兜底 ===
+  # 所有未匹配的流量走漏网之鱼策略组
+  - MATCH,🐟 漏网之鱼

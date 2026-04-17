@@ -1,0 +1,295 @@
+# ============================================================
+# 中国大陆直连规则集
+# ============================================================
+#
+# 用途：作为 Clash rule-provider 使用，匹配中国大陆常用服务的域名/IP，
+#       命中的流量走 DIRECT（直连），避免绕远走代理反而更慢。
+#
+# 使用方式（在 Clash 配置中）：
+#   rule-providers:
+#     china-direct-custom:
+#       type: file
+#       behavior: classical
+#       path: ./rules-china-direct.yaml
+#
+#   rules:
+#     - RULE-SET,china-direct-custom,DIRECT
+#
+# behavior 类型说明：
+#   本文件使用 classical 格式（每行是完整的规则类型+匹配值），
+#   这样可以混合使用 DOMAIN-SUFFIX、DOMAIN-KEYWORD、IP-CIDR 等不同规则类型。
+#
+# 维护建议：根据你的实际使用情况增删条目。不是所有人都用拼多多，
+#           但你可能用 Gitee——按需调整。
+
+payload:
+  # ============================================================
+  # 搜索引擎 & 门户
+  # ============================================================
+  - DOMAIN-SUFFIX,baidu.com
+  - DOMAIN-SUFFIX,baidustatic.com
+  - DOMAIN-SUFFIX,bdstatic.com
+  - DOMAIN-SUFFIX,bdimg.com
+  - DOMAIN-SUFFIX,bcebos.com
+  - DOMAIN-SUFFIX,sogou.com
+  - DOMAIN-SUFFIX,sogo.com
+  - DOMAIN-SUFFIX,so.com
+  - DOMAIN-SUFFIX,360.cn
+  - DOMAIN-SUFFIX,360.com
+  - DOMAIN-SUFFIX,sina.com
+  - DOMAIN-SUFFIX,sina.com.cn
+  - DOMAIN-SUFFIX,sinaimg.cn
+  - DOMAIN-SUFFIX,weibo.com
+  - DOMAIN-SUFFIX,weibo.cn
+  - DOMAIN-SUFFIX,163.com
+  - DOMAIN-SUFFIX,126.net
+  - DOMAIN-SUFFIX,netease.com
+  - DOMAIN-SUFFIX,sohu.com
+
+  # ============================================================
+  # 电商平台
+  # ============================================================
+  - DOMAIN-SUFFIX,taobao.com
+  - DOMAIN-SUFFIX,tmall.com
+  - DOMAIN-SUFFIX,alicdn.com
+  - DOMAIN-SUFFIX,alibaba.com
+  - DOMAIN-SUFFIX,alibabacloud.com
+  - DOMAIN-SUFFIX,1688.com
+  - DOMAIN-SUFFIX,jd.com
+  - DOMAIN-SUFFIX,jd.hk
+  - DOMAIN-SUFFIX,360buyimg.com
+  - DOMAIN-SUFFIX,jdcloud.com
+  - DOMAIN-SUFFIX,pinduoduo.com
+  - DOMAIN-SUFFIX,yangkeduo.com
+  - DOMAIN-SUFFIX,suning.com
+
+  # ============================================================
+  # 视频 & 直播
+  # ============================================================
+  - DOMAIN-SUFFIX,bilibili.com
+  - DOMAIN-SUFFIX,bilivideo.com
+  - DOMAIN-SUFFIX,bilivideo.cn
+  - DOMAIN-SUFFIX,biliapi.net
+  - DOMAIN-SUFFIX,biliapi.com
+  - DOMAIN-SUFFIX,hdslb.com
+  - DOMAIN-SUFFIX,youku.com
+  - DOMAIN-SUFFIX,ykimg.com
+  - DOMAIN-SUFFIX,iqiyi.com
+  - DOMAIN-SUFFIX,iqiyipic.com
+  - DOMAIN-SUFFIX,71.am
+  - DOMAIN-SUFFIX,douyin.com
+  - DOMAIN-SUFFIX,douyinpic.com
+  - DOMAIN-SUFFIX,douyincdn.com
+  - DOMAIN-SUFFIX,tiktokv.com
+  - DOMAIN-SUFFIX,amemv.com
+  - DOMAIN-SUFFIX,ixigua.com
+  - DOMAIN-SUFFIX,pstatp.com
+  - DOMAIN-SUFFIX,huya.com
+  - DOMAIN-SUFFIX,douyu.com
+  - DOMAIN-SUFFIX,kuaishou.com
+
+  # ============================================================
+  # 社交 & 即时通讯
+  # ============================================================
+  # 微信 / WeChat
+  - DOMAIN-SUFFIX,weixin.qq.com
+  - DOMAIN-SUFFIX,wechat.com
+  - DOMAIN-SUFFIX,weixinbridge.com
+  - DOMAIN-SUFFIX,wx.qq.com
+  - DOMAIN-SUFFIX,wxs.qq.com
+
+  # QQ
+  - DOMAIN-SUFFIX,qq.com
+  - DOMAIN-SUFFIX,gtimg.com
+  - DOMAIN-SUFFIX,gtimg.cn
+  - DOMAIN-SUFFIX,idqqimg.com
+  - DOMAIN-SUFFIX,qpic.cn
+  - DOMAIN-SUFFIX,qlogo.cn
+
+  # 钉钉
+  - DOMAIN-SUFFIX,dingtalk.com
+  - DOMAIN-SUFFIX,dingtalk.cn
+
+  # 知乎
+  - DOMAIN-SUFFIX,zhihu.com
+  - DOMAIN-SUFFIX,zhimg.com
+
+  # 小红书
+  - DOMAIN-SUFFIX,xiaohongshu.com
+  - DOMAIN-SUFFIX,xhscdn.com
+
+  # 其他社交
+  - DOMAIN-SUFFIX,douban.com
+  - DOMAIN-SUFFIX,doubanio.com
+  - DOMAIN-SUFFIX,tieba.com
+  - DOMAIN-SUFFIX,tieba.baidu.com
+
+  # ============================================================
+  # 支付平台
+  # ============================================================
+  # 支付宝
+  - DOMAIN-SUFFIX,alipay.com
+  - DOMAIN-SUFFIX,alipayobjects.com
+  - DOMAIN-SUFFIX,alipay.cn
+
+  # 微信支付（域名在 weixin/qq 下，上面已覆盖）
+  # 银联
+  - DOMAIN-SUFFIX,unionpay.com
+  - DOMAIN-SUFFIX,95516.com
+
+  # ============================================================
+  # 云服务 & CDN
+  # ============================================================
+  # 阿里云
+  - DOMAIN-SUFFIX,aliyun.com
+  - DOMAIN-SUFFIX,aliyuncs.com
+  - DOMAIN-SUFFIX,alikunlun.com
+  - DOMAIN-SUFFIX,aliapp.org
+  - DOMAIN-SUFFIX,aliapp.com
+  - DOMAIN-SUFFIX,alidns.com
+
+  # 腾讯云
+  - DOMAIN-SUFFIX,cloud.tencent.com
+  - DOMAIN-SUFFIX,tencent-cloud.net
+  - DOMAIN-SUFFIX,tencentcloud.com
+  - DOMAIN-SUFFIX,myqcloud.com
+  - DOMAIN-SUFFIX,tencent.com
+  - DOMAIN-SUFFIX,dnsv1.com
+
+  # 华为云
+  - DOMAIN-SUFFIX,huaweicloud.com
+  - DOMAIN-SUFFIX,myhuaweicloud.com
+
+  # 七牛云
+  - DOMAIN-SUFFIX,qiniu.com
+  - DOMAIN-SUFFIX,qiniucdn.com
+  - DOMAIN-SUFFIX,qbox.me
+
+  # 又拍云
+  - DOMAIN-SUFFIX,upyun.com
+  - DOMAIN-SUFFIX,upaiyun.com
+
+  # 常见中国 CDN
+  - DOMAIN-SUFFIX,clouddn.com
+  - DOMAIN-SUFFIX,bspapp.com
+  - DOMAIN-SUFFIX,cdn20.com
+  - DOMAIN-SUFFIX,chinanetcenter.com
+  - DOMAIN-SUFFIX,wangsu.com
+  - DOMAIN-SUFFIX,ksyun.com
+  - DOMAIN-SUFFIX,ksyuncdn.com
+
+  # ============================================================
+  # 开发者工具（国内）
+  # ============================================================
+  # Gitee
+  - DOMAIN-SUFFIX,gitee.com
+  - DOMAIN-SUFFIX,gitee.io
+
+  # Coding.net
+  - DOMAIN-SUFFIX,coding.net
+  - DOMAIN-SUFFIX,coding.io
+
+  # npmmirror（淘宝 npm 镜像）
+  - DOMAIN-SUFFIX,npmmirror.com
+  - DOMAIN-SUFFIX,npm.taobao.org
+  - DOMAIN-SUFFIX,registry.npmmirror.com
+
+  # CSDN
+  - DOMAIN-SUFFIX,csdn.net
+  - DOMAIN-SUFFIX,csdnimg.cn
+
+  # 掘金
+  - DOMAIN-SUFFIX,juejin.cn
+  - DOMAIN-SUFFIX,juejin.im
+  - DOMAIN-SUFFIX,xitu.io
+
+  # 博客园
+  - DOMAIN-SUFFIX,cnblogs.com
+
+  # OSChina
+  - DOMAIN-SUFFIX,oschina.net
+  - DOMAIN-SUFFIX,gitee.com
+
+  # 思否 SegmentFault
+  - DOMAIN-SUFFIX,segmentfault.com
+
+  # ============================================================
+  # 政府 & 教育
+  # ============================================================
+  - DOMAIN-SUFFIX,gov.cn
+  - DOMAIN-SUFFIX,edu.cn
+  - DOMAIN-SUFFIX,mil.cn
+  - DOMAIN-SUFFIX,ac.cn
+  - DOMAIN-SUFFIX,org.cn
+
+  # ============================================================
+  # 地图 & 出行
+  # ============================================================
+  - DOMAIN-SUFFIX,amap.com
+  - DOMAIN-SUFFIX,autonavi.com
+  - DOMAIN-SUFFIX,map.baidu.com
+  - DOMAIN-SUFFIX,didi.com
+  - DOMAIN-SUFFIX,didialift.com
+  - DOMAIN-SUFFIX,ctrip.com
+  - DOMAIN-SUFFIX,meituan.com
+  - DOMAIN-SUFFIX,meituan.net
+  - DOMAIN-SUFFIX,dianping.com
+  - DOMAIN-SUFFIX,eleme.cn
+  - DOMAIN-SUFFIX,ele.me
+
+  # ============================================================
+  # 音乐
+  # ============================================================
+  - DOMAIN-SUFFIX,music.163.com
+  - DOMAIN-SUFFIX,music.126.net
+  - DOMAIN-SUFFIX,y.qq.com
+  - DOMAIN-SUFFIX,kugou.com
+  - DOMAIN-SUFFIX,kuwo.cn
+  - DOMAIN-SUFFIX,xiami.com
+
+  # ============================================================
+  # 游戏平台（国内）
+  # ============================================================
+  - DOMAIN-SUFFIX,mihoyo.com
+  - DOMAIN-SUFFIX,hoyoverse.com
+  - DOMAIN-SUFFIX,hoyolab.com
+  - DOMAIN-SUFFIX,mob.com
+  - DOMAIN-SUFFIX,taptap.com
+  - DOMAIN-SUFFIX,taptap.io
+
+  # ============================================================
+  # 域名关键词匹配（覆盖面更广但精度略低）
+  # ============================================================
+  - DOMAIN-KEYWORD,baidu
+  - DOMAIN-KEYWORD,alibaba
+  - DOMAIN-KEYWORD,alipay
+  - DOMAIN-KEYWORD,taobao
+  - DOMAIN-KEYWORD,weixin
+  - DOMAIN-KEYWORD,wechat
+  - DOMAIN-KEYWORD,tencent
+  - DOMAIN-KEYWORD,bilibili
+
+  # ============================================================
+  # 私有/局域网 IP 段（直连）
+  # ============================================================
+  # RFC 1918 私有地址
+  - IP-CIDR,10.0.0.0/8,no-resolve
+  - IP-CIDR,172.16.0.0/12,no-resolve
+  - IP-CIDR,192.168.0.0/16,no-resolve
+
+  # Link-local
+  - IP-CIDR,169.254.0.0/16,no-resolve
+
+  # Loopback
+  - IP-CIDR,127.0.0.0/8,no-resolve
+
+  # Carrier-Grade NAT（运营商级 NAT）
+  - IP-CIDR,100.64.0.0/10,no-resolve
+
+  # ============================================================
+  # 中国大陆 IP 段（GeoIP 兜底）
+  # ============================================================
+  # 这里不列举具体 IP 段（太多了），用 GEOIP 规则兜底更高效：
+  #   GEOIP,CN,DIRECT
+  # 如果你需要离线 IP 列表，参考 annotated-base.yaml 中的
+  # rule-providers china-ip 配置。

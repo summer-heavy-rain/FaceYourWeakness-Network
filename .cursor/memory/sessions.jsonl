@@ -1,0 +1,25 @@
+{"date":"2026-03-21 22:00","summary":"测试 .cursor 配置是否生效，验证 rules 加载和 sessions.jsonl 写入","tags":["配置","测试"]}
+{"date":"2026-03-21 23:00","summary":"将 .cursor 配置从 workspace-scoped 迁移到 user-level：reflect/review 路径改绝对路径，install.ps1 补 memory junction，运行安装","tags":["架构","配置","跨项目"]}
+{"date":"2026-03-22 18:50","summary":"诊断 auto-reflect 触发率低的根因（AI 无法预测最后一条消息），将触发策略从'最后一次回复'改为'每次实质性回复后立即执行'+增量去重","tags":["reflect","架构","可靠性"]}
+{"date":"2026-03-24 12:00","summary":"盘点 union-agent：FastAPI 暴露的路由与金蝶/旺店通/mini橙/顺丰四类外部对接","tags":["union-agent","API","架构"]}
+{"date":"2026-03-27 12:00","summary":"澄清 DNS 概念：DNS 是分布式协议系统而非单一产品，腾讯云只是管理记录的权威 nameserver 后台；进一步理解权威服务器 vs 递归服务器的职责分离（SoC）","tags":["DNS","基础概念","架构"]}
+{"date":"2026-03-27 16:00","summary":"列出 d:\\3.25 下全部 xlsx 文件名；读取最终展示板1/2 的 sheet 名、列与样本行；确认 3.25校验.xls 不存在","tags":["Excel","O2O","数据探查"]}
+{"date":"2026-03-27 20:00","summary":"用电商订单最小案例复习数仓分层模型（ODS/DWD/DWM/DWS/ADS/DIM），梳理 ETL 各阶段合理技术栈选择","tags":["数仓","分层模型","ETL","数据工程"]}
+{"date":"2026-03-27 22:12","summary":"重启本地 union-dashboard（npm/vite 5174）与 union-agent（Python311 uvicorn 8001）；修复 o2o_daily summary 中 total_row 缩进导致无法 import","tags":["union-dashboard","union-agent","重启","Python"]}
+{"date":"2026-03-28 14:00","summary":"按精简笔记要求改写《软件架构设计》书摘：mmap 一行、零拷贝用静态文件出站 read+write vs sendfile+HTTPS 注","tags":["me-library","零拷贝","笔记"]}
+{"date":"2026-03-29 12:00","summary":"说明 Markdown 插入图片的语法（相对路径、外链、HTML img）、Obsidian 式引用与 Paste Image 扩展","tags":["Markdown","笔记","文档"]}
+{"date":"2026-03-29 14:00","summary":"说明 Markdown 无原生灰字语法：blockquote 作弱化、HTML span 样式与 GitHub 清洗限制","tags":["Markdown","排版"]}
+{"date":"2026-03-29 16:00","summary":"把 incompany.md:2-26 工作思考写入 me-Insight.mdc（含原型/系统分界清单）","tags":["me-Insight","笔记归档"]}
+{"date":"2026-03-29 18:30","summary":"将 .cursor/commands 四条工作流迁入 .cursor/skills（me-reflect/me-review/me-commit-pr/me-taxonomy），更新 install.ps1、README、Manual、me.mdc","tags":["Cursor","Skills","配置"]}
+{"date":"2026-03-30 12:00","summary":"解读 OpenClaw-RL README：全异步 RL 框架，通过对话训练个性化 Agent；三种优化方法（Binary RL / OPD / Combine）；两条路线（个人 Agent + 通用 Agentic RL：terminal/GUI/SWE/tool-call）","tags":["OpenClaw-RL","RL","Agent","项目调研"]}
+{"date":"2026-04-05 00:00","summary":"编写办公室局域网共享 Clash Verge 代理指南（00-emergency/office-sharing.md），覆盖 allow-lan 配置、防火墙放行、同事端配置、PAC 自动代理、安全注意事项与常见问题排查","tags":["Clash","代理","办公室","文档"]}
+{"date":"2026-04-05 14:00","summary":"编写 00-emergency/troubleshooting-tree.md：6大分支（完全断网/部分断网/速度慢/开发工具/频繁断连/办公室共享）的 YES/NO 决策树，含60秒快速排错 checklist、PowerShell 诊断命令、交叉引用到知识体系各文档","tags":["Clash","排错","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 16:00","summary":"编写 quick-diagnosis-commands.md（6场景诊断命令速查卡，每条含正常/异常输出）和 glossary.md（44个网络/代理术语表，关联 Clash Verge 实际场景）","tags":["Clash","诊断","术语","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 20:00","summary":"编写 03-clash-mastery/ 两篇核心文档：architecture-overview.md（Clash 五组件架构+数据流+mihomo vs 原版+Verge 定位）和 config-anatomy.md（六大配置区块逐字段注释+区块依赖关系图+六种经典翻车+安全修改原则）","tags":["Clash","架构","配置","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 00:46","summary":"编写 03-clash-mastery/ 两篇核心文档：dns-strategy.md（fake-ip vs redir-host 工作原理+对比+DNS 配置最佳实践+排查）和 rule-engine.md（规则类型详解+顺序+no-resolve+Rule Providers+实战规则设计+调试）","tags":["Clash","DNS","规则","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 02:30","summary":"编写 05-appendix/ 两篇文档：gfw-patterns.md（7种GFW封锁模式识别+诊断流程树+速查表）和 useful-links.md（6分类学习资源+诊断工具+社区，附水平标注和一句话说明）","tags":["GFW","封锁模式","资源","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 22:30","summary":"编写 02-proxy-protocols/ 五篇文档：what-is-a-proxy（代理本质+工作模式）、socks5-vs-http-proxy（本地代理协议对比+与翻墙协议的关系）、shadowsocks-vmess-trojan（翻墙协议演化史）、quic-based-protocols（QUIC/Hysteria2/TUIC）、protocol-cheatsheet（协议选择速查表+决策树+CDN中转）","tags":["代理协议","翻墙","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 04:30","summary":"编写 01-packet-journey/ 四篇基础网络文档：the-life-of-a-packet.md（数据包全旅程+TCP/IP四层映射）、dns-the-phonebook.md（DNS解析/污染/泄漏/Clash方案）、nat-and-gfw.md（NAT原理+GFW五种检测手段+军备竞赛timeline）、tls-trust-chain.md（TLS握手/证书链/SNI泄漏/MITM诊断/Trojan原理）","tags":["网络基础","TCP/IP","DNS","GFW","TLS","文档","FaceYourWeakness-Network"]}
+{"date":"2026-04-05 03:00","summary":"完成 FaceYourWeakness-Network 知识仓库全部构建：28个文件，三阶段（急救通道→Clash精通→网络基础），双轨制设计（Track A排错/Track B补课）。从排错决策树到协议演化史，覆盖网络基础、代理协议、Clash配置、实战模板","tags":["FaceYourWeakness-Network","网络","Clash","知识体系","里程碑"]}
+{"date":"2026-04-07 10:00","summary":"为新员工培训整理 Cursor 核心技巧清单：四层递进（生存级→效率级→进阶级→团队协作级），含培训节奏建议","tags":["Cursor","培训","文档"]}
+{"date":"2026-04-17 10:06","summary":"检查 FaceYourWeakness-Network 的 git 状态，确认当前目录不是 git 仓库、没有 .git，因此暂时不能直接 commit/push 到 GitHub","tags":["git","GitHub","仓库初始化","排查"]}
