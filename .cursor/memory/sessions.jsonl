@@ -23,3 +23,4 @@
 {"date":"2026-04-05 03:00","summary":"完成 FaceYourWeakness-Network 知识仓库全部构建：28个文件，三阶段（急救通道→Clash精通→网络基础），双轨制设计（Track A排错/Track B补课）。从排错决策树到协议演化史，覆盖网络基础、代理协议、Clash配置、实战模板","tags":["FaceYourWeakness-Network","网络","Clash","知识体系","里程碑"]}
 {"date":"2026-04-07 10:00","summary":"为新员工培训整理 Cursor 核心技巧清单：四层递进（生存级→效率级→进阶级→团队协作级），含培训节奏建议","tags":["Cursor","培训","文档"]}
 {"date":"2026-04-17 10:06","summary":"检查 FaceYourWeakness-Network 的 git 状态，确认当前目录不是 git 仓库、没有 .git，因此暂时不能直接 commit/push 到 GitHub","tags":["git","GitHub","仓库初始化","排查"]}
+{"date":"2026-04-17 10:11","summary":"初始化 FaceYourWeakness-Network 为 git 仓库，创建首个 docs 提交并推送到 GitHub 远程 summer-heavy-rain/FaceYourWeakness-Network 的 main 分支","tags":["git","GitHub","commit","push","PowerShell"]}
